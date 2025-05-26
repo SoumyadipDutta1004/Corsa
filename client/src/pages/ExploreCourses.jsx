@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import { useNavigate } from "react-router";
-import { useUserStore } from "../utils/store";
 
 export default function ExploreCourses() {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("all");
-  const user = useUserStore((state) => state.user);
-  console.log(user);
   
 
   const redirect = useNavigate();
@@ -55,8 +52,6 @@ export default function ExploreCourses() {
         >
           Search
         </button>
-      </div>
-      <div className="text-black">
       </div>
 
       {/* Course Container */}
