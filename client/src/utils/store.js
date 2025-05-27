@@ -14,3 +14,15 @@ export const useUserStore = create(
     }
   )
 );
+export const useCourseStore = create(
+  persist(
+    (set) => ({
+      currentCourse: null,
+      setCourse: (course) => set({ course: { ...course } }),
+    }),
+    {
+      name: "course-storage",
+      getStorage: () => localStorage,
+    }
+  )
+);

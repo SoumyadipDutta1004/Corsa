@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import { Link, useNavigate } from "react-router";
+import { useCourseStore } from "../utils/store";
 
 export default function AdminCourses() {
   const navigate = useNavigate();
   const [adminCourses, setAdminCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const setCourse = useCourseStore((state) => state.setCourse);
   const [error, setError] = useState("");
 
   async function getMyCourses() {
@@ -26,6 +28,11 @@ export default function AdminCourses() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function viewCourse(courseId, course) {
+    setCourse(course);
+    navigate(`/course/${courseId}`);
   }
 
   useEffect(() => {
@@ -86,12 +93,12 @@ export default function AdminCourses() {
                   <div className="text-gray-900 font-medium">₹{course.price}</div>
                   <div className="text-sm text-gray-500">{course.creatorId.name}</div>
                 </div>
-                <Link
-                  to={`/course/${course._id}`}
+                <button
+                  onClick={() => viewCourse(course._id, course)}
                   className="block w-full bg-black text-white text-center py-2 rounded text-sm hover:bg-gray-800 transition-colors"
                 >
                   View Course
-                </Link>
+                </button>
               </div>
             </div>
           ))}

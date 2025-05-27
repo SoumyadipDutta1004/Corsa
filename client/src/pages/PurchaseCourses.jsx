@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import { useNavigate, useParams } from "react-router";
+import { useCourseStore } from "../utils/store";
 
 export default function PurchaseCourses() {
   const { courseId } = useParams();
   const [course, setCourse] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const currentCourse = useCourseStore((state) => state.course);
   const navigate = useNavigate();
 
   async function getCourseDetails() {
     try {
+      if (currentCourse._id === courseId) {
+        setCourse(currentCourse);
+        return;
+      }
       const response = await axiosInstance(`/courses/${courseId}`);
       setCourse(response.data.data);
     } catch (error) {
@@ -51,28 +57,36 @@ export default function PurchaseCourses() {
     <div className="min-h-screen w-full bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <div className="bg-white p-8 rounded shadow-sm border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Complete Purchase</h2>
-          
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Complete Purchase
+          </h2>
+
           <div className="mb-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">{course.title}</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {course.title}
+            </h3>
             <p className="text-sm text-gray-600 mb-4">{course.description}</p>
-            
+
             <div className="flex items-baseline space-x-2 mb-4">
-              <span className="text-2xl font-medium text-gray-900">₹{course.price}</span>
+              <span className="text-2xl font-medium text-gray-900">
+                ₹{course.price}
+              </span>
               <span className="text-sm text-gray-500">one-time payment</span>
             </div>
 
             <div className="border-t border-gray-100 pt-4">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-medium text-gray-900">Total Amount</span>
-                <span className="text-lg font-medium text-gray-900">₹{course.price}</span>
+                <span className="text-sm font-medium text-gray-900">
+                  Total Amount
+                </span>
+                <span className="text-lg font-medium text-gray-900">
+                  ₹{course.price}
+                </span>
               </div>
             </div>
           </div>
 
-          {error && (
-            <div className="mb-4 text-sm text-red-600">{error}</div>
-          )}
+          {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
 
           <button
             onClick={handlePurchase}
