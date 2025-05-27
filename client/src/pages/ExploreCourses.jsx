@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import { useNavigate } from "react-router";
+import { useCourseStore } from "../utils/store";
 
 export default function ExploreCourses() {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("all");
-  
+
+  const setCourse = useCourseStore((state) => state.setCourse);
 
   const redirect = useNavigate();
 
@@ -23,8 +25,9 @@ export default function ExploreCourses() {
     }
   }
 
-  function handlePurchase(_, i) {
-    redirect(`/course/${courses[i]._id}`);
+  function handlePurchase(course) {
+    setCourse(course);
+    redirect(`/course/${course._id}`);
   }
 
   useEffect(() => {
@@ -68,7 +71,7 @@ export default function ExploreCourses() {
             <div
               key={i}
               className={`rounded-xl aspect-3/2 shadow-xl relative overflow-hidden cursor-pointer`}
-              onClick={(e) => handlePurchase(e, i)}
+              onClick={() => handlePurchase(course)}
             >
               <img
                 src={

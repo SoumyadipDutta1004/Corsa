@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { axiosInstance } from "../utils/axios";
+import { useCourseStore } from "../utils/store";
 
 export default function Course() {
   const { courseId } = useParams();
   const [course, setCourse] = useState({});
-
+  const currentCourse = useCourseStore((state) => state.course);
   const redirect = useNavigate();
 
   async function getCourseDetails() {
     try {
+      if (currentCourse._id === courseId) {
+        setCourse(currentCourse);
+        return;
+      }
       const response = await axiosInstance(`/courses/${courseId}`);
       setCourse(response.data.data);
     } catch (error) {

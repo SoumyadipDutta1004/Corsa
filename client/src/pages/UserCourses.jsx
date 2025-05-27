@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import { useNavigate } from "react-router";
+import { useCourseStore } from "../utils/store";
 
 export default function UserCourses() {
   const [myCourses, setMyCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const setCourse = useCourseStore((state) => state.setCourse);
   const navigate = useNavigate();
 
   async function getMyCourses() {
@@ -26,6 +28,11 @@ export default function UserCourses() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function viewCourse(courseId, course) {
+    setCourse(course);
+    navigate(`/course/${courseId}`);
   }
 
   useEffect(() => {
@@ -94,7 +101,7 @@ export default function UserCourses() {
                 </div>
 
                 <button
-                  onClick={() => navigate(`/course/${course._id}`)}
+                  onClick={() => viewCourse(course._id, course)}
                   className="mt-4 w-full bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors"
                 >
                   View Course
